@@ -6,7 +6,7 @@
 /*   By: tkroon <tkroon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 13:12:55 by tkroon            #+#    #+#             */
-/*   Updated: 2026/04/09 11:10:22 by tkroon           ###   ########.fr       */
+/*   Updated: 2026/04/13 12:57:40 by tkroon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,9 @@ int	ft_strstore(t_list *lst, const char *src, size_t size)
 	l = 0;
 	i = 0;
 	j = 0;
-	while (j + i != size)
+	while (j + i < size)
 	{
-		i++;
-			if (src[j + i] == '\n')
+		if (src[j + i] == '\n')
 		{
 			i++;
 			new = malloc((i) + 1);
@@ -74,7 +73,10 @@ int	ft_strstore(t_list *lst, const char *src, size_t size)
 			j = j + p;
 			l++;
 		}
+		i++;
 	}
+	if(j >= size)
+		return (l);
 	new = malloc(i + 1);
 	new[i] = '\0';
 	while (i > 0)
@@ -87,8 +89,7 @@ int	ft_strstore(t_list *lst, const char *src, size_t size)
 	return (l);
 }
 
-
-char	*line_malloc(t_list *lst, char *str, int n)
+int	line_size(t_list *lst, int n)
 {
 	int i = 0;
 	int j = 0;
@@ -103,19 +104,21 @@ char	*line_malloc(t_list *lst, char *str, int n)
 			break;
 		if (!lst->line && !lst->next)
 		{
-			return(NULL);
+			return(0);
 		}
 		lst = lst->next;
 	}
-	str = malloc(j + 1);
-	return (str);
+	return (j);
 }
 
-t_list	*ft_strmerge(t_list *lst,char *str, int n)
+char	*ft_strmerge(t_list *lst, int n)
 {
 	int i = 0;
 	int j = 0;
-	
+	char *str;
+	t_list *temp;
+
+	str = malloc(line_size(lst, n) + 1);
 	while(1)
 	{
 		while (lst->content[i] != '\0')
@@ -125,20 +128,25 @@ t_list	*ft_strmerge(t_list *lst,char *str, int n)
 		}
 		j = j + i;
 		i = 0;
-		if (lst-> line || (!n && !lst-> next))
-			break;
+		temp = lst;
 		lst = lst-> next;
+		if (temp-> line || (!n && !temp-> next))
+		{
+			free(temp->content);
+			free(temp);
+			break;
+		}
+		free(temp->content);
+		free(temp);
 	}
 	str[j] = '\0';
-	return (lst-> next);
+	return (str);
 }
 
 char	*make_line_list(const char *src, int n)
 {
 	static int i = 0;
-	char *line = NULL;
 	static t_list	*l;
-
 		if (i == 0)
 		{
 			l = (t_list *)malloc(sizeof(t_list));
@@ -146,32 +154,38 @@ char	*make_line_list(const char *src, int n)
 			l -> next = NULL;
 		}
 	if(n)
+	{
 		i = ft_strstore(l, src, n);	
-	else
-	{
-		line = line_malloc(l, line, n);
-		ft_strmerge(l, line, n);
-		return (line);
-	}
-	if (l->line)
-	{
-		line =	l -> content;
-		l = l -> next;
 	}
 	else
 	{
-		line = line_malloc(l, line, n);
-		if (line)
-			l = ft_strmerge(l, line, n);
-		return (line);
+		i = 0;
+		return (ft_strmerge(l, n));
 	}
-	return (line);
+	if (line_size(l, n))
+	{
+		i = 0;
+		return (ft_strmerge(l, n));
+	}
+	return(NULL);
 }
 
-// int main ()
-// {
-// 	printf("=%s=", make_line_list("0123456789",10));
-// 	printf("=%s=", make_line_list("ABCDE\nFGHI",10));
-// 	printf("=%s=", make_line_list("abcdefghjh",10));
-// 	printf("=%s=", make_line_list("",0));
-// }
+int main ()
+{
+	char *line;
+	
+	
+	line = make_line_list("0123456789",10);
+	line = make_line_list("\n987654321",10);
+	line = make_line_list("09\n0123456",10);
+	line = make_line_list("78901\n9876",10);
+	line = make_line_list("5432109\n01",10);
+	line = make_line_list("23456789",8);
+	line = make_line_list("",0);
+	// printf("=%s=", make_line_list("0",1));
+	// printf("=%s=", make_line_list("",0));
+	// // printf("=%s=", make_line_list("\n",1));
+	// // printf("=%s=", make_line_list("0123456789\n",11));
+	// // printf("=%s=", make_line_list("\n",1));
+	// // printf("=%s=", make_line_list("9876543210\n",11));
+}
