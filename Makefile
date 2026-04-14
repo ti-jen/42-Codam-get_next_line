@@ -11,7 +11,7 @@ test: lib
 	$(CC) $(CFLAGS) get_next_line.c -L. $(NAME).a && $(VALGRIND) ./a.out
 
 util: 
-	$(CC) $(CFLAGS) get_next_line_utils.c &&  $(VALGRIND) ./a.out
+	$(CC) $(CFLAGS) backup.c &&  $(VALGRIND) ./a.out
 
 lib : comp
 	ar rcs $(NAME).a $(SRC).o 

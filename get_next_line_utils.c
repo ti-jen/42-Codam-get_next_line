@@ -6,7 +6,7 @@
 /*   By: tkroon <tkroon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 13:12:55 by tkroon            #+#    #+#             */
-/*   Updated: 2026/04/13 12:57:40 by tkroon           ###   ########.fr       */
+/*   Updated: 2026/04/14 18:30:26 by tkroon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,178 +14,158 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <fcntl.h>
-// #include "get_next_line.h"
+#include <stdbool.h>
+#include "get_next_line.h"
+#ifndef BUFFER_SIZE
+#define BUFFER_SIZE 1
+#endif
 
-typedef struct s_list
+
+int ft_memadd(char *dest , const char *src, size_t n)
 {
-	char			*content;
-	int				line;
-	struct s_list	*next;
-}	t_list;
+	int i;
 
+	i = 0;
+	while(src[i] != '\0')
+	{
+		dest[n + i] = src[i];
+		i++;
+	}
+	return(i);
+}
 
-void	ft_lstadd_back(t_list *lst, char * content, int line)
+char	*ft_memcpy(const char *src, size_t n)
+{
+	char			*str;
+	
+	str = malloc(n + 1);
+	str[n] = '\0';
+	while (n > 0)
+	{
+		n--;
+		str[n] = src[n];
+	}
+	return (str);
+}
+
+t_list	*ft_lstadd_back(t_list *lst, char * content, int size)
 {
 	t_list	*temp;
 	t_list	*new;
-	if (!lst->content)
+	if (size <= 0)
+		return (lst);
+	if (!lst)
 	{
-		lst->content = content;
-		lst->line = line;
-		return ;
+		lst = (t_list *)malloc(sizeof(t_list));
+		lst ->content = ft_memcpy(content, size);
+		lst	->lenght = size;
+		lst -> next = NULL;
+		return (lst);
 	}
 	temp = (lst);
 	new = (t_list *)malloc(sizeof(t_list));
-	new ->content = content;
-	new ->line = line;
+	new ->content = ft_memcpy(content, size);
+	new ->lenght = size;
 	new -> next = NULL;
 	while (temp-> next)
 	{
 		temp = temp-> next;
 	}
 	temp->next = new;
+	
+	return (lst);
 }
 
-int	ft_strstore(t_list *lst, const char *src, size_t size)
+int ft_is_line(char *lst, size_t size)
 {
-	char *new;
-	size_t i;
-	size_t p;
-	size_t j;
-	int l;
-	l = 0;
+	size_t i = 0;
+	if (!size || !lst)
+		return(0);
+	while(lst[i] != '\n')
+	{
+		i++;
+		if (i >= size)
+			return(0);
+	}
+	return(i + 1);
+}
+
+int ft_line_lenght(t_list * l, bool end)
+{
+	t_list *temp;
+	int i = 0;
+	
+	temp = l;
+	while(temp->next)
+	{
+		i = i + temp->lenght;
+		temp = temp->next;
+	}
+	if(!end)
+		i = i + ft_is_line(temp->content, temp->lenght);
+	else
+		i = i + temp->lenght;
+	return (i);
+}
+
+t_list *ft_split_line(char *str, size_t n, t_list *l)
+{
+	int i;
+	int j;
+	char *dest;
+	
 	i = 0;
 	j = 0;
-	while (j + i < size)
+	while (l->content[i] != '\n')
 	{
-		if (src[j + i] == '\n')
-		{
-			i++;
-			new = malloc((i) + 1);
-			new[i] = '\0';
-			p = i;
-			while (i > 0)
-			{	
-				i--;
-				new[i] = src[j + i];
-			}
-			ft_lstadd_back(lst, new, 1);
-			j = j + p;
-			l++;
-		}
+		str[i + n] = l->content[i];
 		i++;
 	}
-	if(j >= size)
-		return (l);
-	new = malloc(i + 1);
-	new[i] = '\0';
-	while (i > 0)
+	str[i + n] = '\n';
+	i++;
+	str[i + n] = '\0';
+	l->lenght = l->lenght - i;
+	if (l->lenght <= 0)
 	{
-		i--;
-		new[i] = src[j + i];
+		free(l->content);
+		free(l);
+		l = NULL;
+		return(l);
 	}
-	l++;
-	ft_lstadd_back(lst, new, 0);
-	return (l);
+	dest = malloc((l->lenght) + 1);
+	while (l->content[i + j] != '\0')
+	{
+		dest[j] = l->content[i + j];
+		j++;
+	}
+	dest[j] = '\0';
+	l->content = dest;
+	return(l);
 }
 
-int	line_size(t_list *lst, int n)
-{
-	int i = 0;
-	int j = 0;
 
-	while (1)
-	{
-		while (lst->content[i] != '\0')
-			i++;
-		j = j + i;
-		i = 0;
-		if (lst-> line || (!n && !lst-> next))
-			break;
-		if (!lst->line && !lst->next)
-		{
-			return(0);
-		}
-		lst = lst->next;
-	}
-	return (j);
-}
-
-char	*ft_strmerge(t_list *lst, int n)
+t_list *ft_make_line(char *str, t_list *l, bool end)
 {
-	int i = 0;
-	int j = 0;
-	char *str;
+	int i;
 	t_list *temp;
 
-	str = malloc(line_size(lst, n) + 1);
-	while(1)
+	i = 0;
+	while(l->next)
 	{
-		while (lst->content[i] != '\0')
-		{
-			str[j + i] = lst->content[i];
-			i++;
-		}
-		j = j + i;
-		i = 0;
-		temp = lst;
-		lst = lst-> next;
-		if (temp-> line || (!n && !temp-> next))
-		{
-			free(temp->content);
-			free(temp);
-			break;
-		}
+		i = i + ft_memadd(str, l->content, i);
+		temp = l;
+		l = l->next;
 		free(temp->content);
 		free(temp);
 	}
-	str[j] = '\0';
-	return (str);
-}
-
-char	*make_line_list(const char *src, int n)
-{
-	static int i = 0;
-	static t_list	*l;
-		if (i == 0)
-		{
-			l = (t_list *)malloc(sizeof(t_list));
-			l -> content = NULL;
-			l -> next = NULL;
-		}
-	if(n)
+	if	(end)
 	{
-		i = ft_strstore(l, src, n);	
+		ft_memadd(str, l->content, i);
+		str[i + l->lenght] = '\0';
+		free(l->content);
+		free(l);
 	}
 	else
-	{
-		i = 0;
-		return (ft_strmerge(l, n));
-	}
-	if (line_size(l, n))
-	{
-		i = 0;
-		return (ft_strmerge(l, n));
-	}
-	return(NULL);
-}
-
-int main ()
-{
-	char *line;
-	
-	
-	line = make_line_list("0123456789",10);
-	line = make_line_list("\n987654321",10);
-	line = make_line_list("09\n0123456",10);
-	line = make_line_list("78901\n9876",10);
-	line = make_line_list("5432109\n01",10);
-	line = make_line_list("23456789",8);
-	line = make_line_list("",0);
-	// printf("=%s=", make_line_list("0",1));
-	// printf("=%s=", make_line_list("",0));
-	// // printf("=%s=", make_line_list("\n",1));
-	// // printf("=%s=", make_line_list("0123456789\n",11));
-	// // printf("=%s=", make_line_list("\n",1));
-	// // printf("=%s=", make_line_list("9876543210\n",11));
+		l = ft_split_line(str, i, l);
+	return(l);
 }

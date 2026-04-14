@@ -6,18 +6,21 @@
 /*   By: tkroon <tkroon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 12:37:57 by tkroon            #+#    #+#             */
-/*   Updated: 2026/04/13 11:52:50 by tkroon           ###   ########.fr       */
+/*   Updated: 2026/04/14 18:01:19 by tkroon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 
-char *get_next_line(int fd); 
-char	*ft_memcpy(const char *src, int n);
-char	*make_line_list(const char *src, int n);
-
 typedef struct s_list
 {
-	void			*content;
+	char			*content;
+	int				lenght;
 	struct s_list	*next;
 }	t_list;
+
+char *get_next_line(int fd); 
+int ft_is_line(char *lst, size_t size);
+int ft_line_lenght(t_list * l, bool end);
+t_list *ft_make_line(char *str, t_list *l, bool end);
+t_list	*ft_lstadd_back(t_list *lst, char * content, int size);
