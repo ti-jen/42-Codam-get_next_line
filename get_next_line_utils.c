@@ -6,7 +6,7 @@
 /*   By: tkroon <tkroon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 13:12:55 by tkroon            #+#    #+#             */
-/*   Updated: 2026/04/14 18:30:26 by tkroon           ###   ########.fr       */
+/*   Updated: 2026/04/15 10:26:56 by tkroon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int ft_memadd(char *dest , const char *src, size_t n)
 	return(i);
 }
 
-char	*ft_memcpy(const char *src, size_t n)
+char	*ft_memcpy(char *src, size_t n)
 {
 	char			*str;
 	
@@ -139,6 +139,7 @@ t_list *ft_split_line(char *str, size_t n, t_list *l)
 		j++;
 	}
 	dest[j] = '\0';
+	free (l->content);
 	l->content = dest;
 	return(l);
 }
