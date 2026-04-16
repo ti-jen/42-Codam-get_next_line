@@ -6,7 +6,7 @@
 /*   By: tkroon <tkroon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 11:29:21 by tkroon            #+#    #+#             */
-/*   Updated: 2026/04/15 17:42:14 by tkroon           ###   ########.fr       */
+/*   Updated: 2026/04/16 11:17:49 by tkroon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	*get_next_line(int fd)
 
 	if (!i)
 		return (NULL);
-	if (l && ft_is_line(l->content, l->lenght))
+	if (l && ft_line_lenght(l, i))
 		return (extract_line(&l, true));
 	chunk = malloc(BUFFER_SIZE);
 	if (!(chunk))
@@ -39,7 +39,7 @@ char	*get_next_line(int fd)
 		l = ft_lstadd_back(l, chunk, i);
 		if (i <= 0 && !l)
 			break ;
-		if (ft_is_line(chunk, i) || !i)
+		if (ft_line_lenght(l, i))
 		{
 			free(chunk);
 			return (extract_line(&l, i));

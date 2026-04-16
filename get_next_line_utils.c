@@ -6,7 +6,7 @@
 /*   By: tkroon <tkroon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 13:12:55 by tkroon            #+#    #+#             */
-/*   Updated: 2026/04/15 19:33:12 by tkroon           ###   ########.fr       */
+/*   Updated: 2026/04/16 12:57:32 by tkroon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,80 +30,59 @@ int	ft_memadd(char *dest, const char *src, size_t n, char in)
 	return (i);
 }
 
-char	*ft_memcpy(char *src, size_t n)
-{
-	char			*str;
-
-	str = malloc(n + 1);
-	str[n] = '\0';
-	while (n > 0)
-	{
-		n--;
-		str[n] = src[n];
-	}
-	return (str);
-}
-
 t_list	*ft_lstadd_back(t_list *lst, char *content, int size)
 {
 	t_list	*temp;
 	t_list	*new;
+	char	*str;
 
 	if (size <= 0)
 		return (lst);
-	if (!lst)
-	{
-		lst = (t_list *)malloc(sizeof(t_list));
-		lst ->content = ft_memcpy(content, size);
-		lst ->lenght = size;
-		lst -> next = NULL;
-		return (lst);
-	}
 	temp = (lst);
 	new = (t_list *)malloc(sizeof(t_list));
-	new ->content = ft_memcpy(content, size);
 	new ->lenght = size;
+	str = malloc(size + 1);
+	str[size] = '\0';
+	while (size--)
+		str[size] = content[size];
+	new ->content = str;
 	new -> next = NULL;
-	while (temp-> next)
+	if (!temp)
+		lst = new;
+	else
 	{
-		temp = temp-> next;
+		while (temp-> next)
+			temp = temp-> next;
+		temp->next = new;
 	}
-	temp->next = new;
 	return (lst);
 }
 
-int	ft_is_line(char *lst, size_t size)
-{
-	size_t	i;
-
-	i = 0;
-	if (!size || !lst)
-		return (0);
-	while (lst[i] != '\n')
-	{
-		i++;
-		if (i >= size)
-			return (0);
-	}
-	return (i + 1);
-}
-
-int	ft_line_lenght(t_list *l, bool end)
+int	ft_line_lenght(t_list *l, bool notend)
 {
 	t_list	*temp;
 	int		i;
+	int		j;
 
 	i = 0;
+	j = 0;
 	temp = l;
+	if (!l)
+		return (0);
 	while (temp->next)
 	{
 		i = i + temp->lenght;
 		temp = temp->next;
 	}
-	if (end)
-		i = i + ft_is_line(temp->content, temp->lenght);
-	else
-		i = i + temp->lenght;
+	if (!temp->lenght)
+		return (0);
+	while (j < temp->lenght && temp->content[j] != '\n')
+		j++;
+	if (j >= temp->lenght && notend)
+		return (0);
+	if (temp->content[j] == '\n')
+		j++;
+	i = i + j;
 	return (i);
 }
 
@@ -125,7 +104,9 @@ t_list	*ft_split_line(char *str, size_t n, t_list *l)
 		l = NULL;
 		return (l);
 	}
-	dest = ft_memcpy(&l->content[i], l->lenght);
+	dest = malloc(l->lenght + 1);
+	i = ft_memadd(dest, &l->content[i], 0, '\0');
+	dest[i] = '\0';
 	free (l->content);
 	l->content = dest;
 	return (l);
