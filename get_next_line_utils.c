@@ -6,18 +6,17 @@
 /*   By: tkroon <tkroon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 13:12:55 by tkroon            #+#    #+#             */
-/*   Updated: 2026/04/16 12:57:32 by tkroon           ###   ########.fr       */
+/*   Updated: 2026/04/16 13:14:47 by tkroon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <fcntl.h>
 #include <stdbool.h>
 #include "get_next_line.h"
 
-int	ft_memadd(char *dest, const char *src, size_t n, char in)
+static int	ft_memadd(char *dest, const char *src, size_t n, char in)
 {
 	int	i;
 
@@ -30,15 +29,15 @@ int	ft_memadd(char *dest, const char *src, size_t n, char in)
 	return (i);
 }
 
-t_list	*ft_lstadd_back(t_list *lst, char *content, int size)
+t_list	*ft_lstadd_back(t_list *l, char *content, int size)
 {
 	t_list	*temp;
 	t_list	*new;
 	char	*str;
 
 	if (size <= 0)
-		return (lst);
-	temp = (lst);
+		return (l);
+	temp = (l);
 	new = (t_list *)malloc(sizeof(t_list));
 	new ->lenght = size;
 	str = malloc(size + 1);
@@ -48,14 +47,14 @@ t_list	*ft_lstadd_back(t_list *lst, char *content, int size)
 	new ->content = str;
 	new -> next = NULL;
 	if (!temp)
-		lst = new;
+		l = new;
 	else
 	{
 		while (temp-> next)
 			temp = temp-> next;
 		temp->next = new;
 	}
-	return (lst);
+	return (l);
 }
 
 int	ft_line_lenght(t_list *l, bool notend)
@@ -86,7 +85,7 @@ int	ft_line_lenght(t_list *l, bool notend)
 	return (i);
 }
 
-t_list	*ft_split_line(char *str, size_t n, t_list *l)
+static t_list	*ft_split_line(char *str, size_t n, t_list *l)
 {
 	int		i;
 	char	*dest;
@@ -112,7 +111,7 @@ t_list	*ft_split_line(char *str, size_t n, t_list *l)
 	return (l);
 }
 
-char	*extract_line(t_list **l, int end)
+char	*ft_extract_line(t_list **l, int end)
 {
 	char	*str;
 	int		i;

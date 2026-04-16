@@ -6,15 +6,13 @@
 /*   By: tkroon <tkroon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 11:29:21 by tkroon            #+#    #+#             */
-/*   Updated: 2026/04/16 11:17:49 by tkroon           ###   ########.fr       */
+/*   Updated: 2026/04/16 13:27:08 by tkroon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <fcntl.h>
-#include <stdbool.h>
 #include "get_next_line.h"
 #ifndef BUFFER_SIZE
 # define BUFFER_SIZE 1
@@ -29,7 +27,7 @@ char	*get_next_line(int fd)
 	if (!i)
 		return (NULL);
 	if (l && ft_line_lenght(l, i))
-		return (extract_line(&l, true));
+		return (ft_extract_line(&l, true));
 	chunk = malloc(BUFFER_SIZE);
 	if (!(chunk))
 		return (NULL);
@@ -42,7 +40,7 @@ char	*get_next_line(int fd)
 		if (ft_line_lenght(l, i))
 		{
 			free(chunk);
-			return (extract_line(&l, i));
+			return (ft_extract_line(&l, i));
 		}
 	}
 	free(chunk);
