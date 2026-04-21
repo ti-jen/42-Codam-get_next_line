@@ -35,13 +35,13 @@ https://pythontutor.com/visualize.html#mode=edit
 
 https://stackoverflow.com/questions
 
-https://www.rapidtables.com/convert/number/hex-to-decimal.html
-
 https://github.com/paulo-santana/ft_printf_tester#
 
 https://github.com/Tripouille/printfTester#
 
 https://chatgpt.com/
+
+https://www.w3schools.com/
 
 ### usage of AI
 
