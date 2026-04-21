@@ -6,7 +6,7 @@
 /*   By: tkroon <tkroon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 12:37:57 by tkroon            #+#    #+#             */
-/*   Updated: 2026/04/16 14:24:46 by tkroon           ###   ########.fr       */
+/*   Updated: 2026/04/21 11:45:37 by tkroon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ typedef struct s_list
 
 char	*get_next_line(int fd);
 int		ft_line_lenght(t_list *l, bool end);
-t_list	*ft_lstadd_back(t_list *lst, char *content, int size);
+void	ft_lstadd_back(t_list **lst, char *content, int size);
 char	*ft_extract_line(t_list **l, int end);
 
 #endif

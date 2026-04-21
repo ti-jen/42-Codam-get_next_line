@@ -21,7 +21,7 @@ in this project you can use the Makefile to compile and create 'get_next_line.a'
 ```
 == executes the whole program ==
 make all
-== remmoves all object files ==
+== removes all object files ==
 make clean
 == removes all files created by the program ==
 make fclean
@@ -45,4 +45,4 @@ https://www.w3schools.com/
 
 ### usage of AI
 
-AI was used to create this README it was also used to explain valgrind errors and give suggestion in how to shorten the code to pass Norminette
+AI was used to create this README. it was also used to explain valgrind errors and give suggestion in how to shorten the code to pass Norminette

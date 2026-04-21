@@ -6,7 +6,7 @@
 /*   By: tkroon <tkroon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 11:29:21 by tkroon            #+#    #+#             */
-/*   Updated: 2026/04/16 16:32:24 by tkroon           ###   ########.fr       */
+/*   Updated: 2026/04/21 11:44:46 by tkroon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ char	*get_next_line(int fd)
 	while (i)
 	{
 		i = read(fd, chunk, BUFFER_SIZE);
-		l = ft_lstadd_back(l, chunk, i);
+		ft_lstadd_back(&l, chunk, i);
 		if (i <= 0 && !l)
 			break ;
 		if (ft_line_lenght(l, i))

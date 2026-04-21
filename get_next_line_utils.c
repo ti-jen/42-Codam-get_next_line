@@ -6,7 +6,7 @@
 /*   By: tkroon <tkroon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 13:12:55 by tkroon            #+#    #+#             */
-/*   Updated: 2026/04/16 13:14:47 by tkroon           ###   ########.fr       */
+/*   Updated: 2026/04/21 11:50:53 by tkroon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,32 +29,33 @@ static int	ft_memadd(char *dest, const char *src, size_t n, char in)
 	return (i);
 }
 
-t_list	*ft_lstadd_back(t_list *l, char *content, int size)
+void	ft_lstadd_back(t_list **l, char *content, int size)
 {
 	t_list	*temp;
 	t_list	*new;
 	char	*str;
 
 	if (size <= 0)
-		return (l);
-	temp = (l);
+		return ;
+	temp = *l;
 	new = (t_list *)malloc(sizeof(t_list));
-	new ->lenght = size;
 	str = malloc(size + 1);
+	if (!str || !new)
+		return ;
+	new ->lenght = size;
 	str[size] = '\0';
 	while (size--)
 		str[size] = content[size];
 	new ->content = str;
 	new -> next = NULL;
 	if (!temp)
-		l = new;
+		*l = new;
 	else
 	{
 		while (temp-> next)
 			temp = temp-> next;
 		temp->next = new;
 	}
-	return (l);
 }
 
 int	ft_line_lenght(t_list *l, bool notend)
@@ -104,6 +105,8 @@ static t_list	*ft_split_line(char *str, size_t n, t_list *l)
 		return (l);
 	}
 	dest = malloc(l->lenght + 1);
+	if (!dest)
+		return (NULL);
 	i = ft_memadd(dest, &l->content[i], 0, '\0');
 	dest[i] = '\0';
 	free (l->content);
@@ -121,6 +124,8 @@ char	*ft_extract_line(t_list **l, int end)
 	i = 0;
 	lst = *l;
 	str = malloc(ft_line_lenght(lst, end) + 1);
+	if (!str)
+		return (NULL);
 	while (lst)
 	{
 		if (!lst -> next && end)
@@ -132,9 +137,7 @@ char	*ft_extract_line(t_list **l, int end)
 		free(temp);
 	}
 	if (!end)
-	{
 		str[i] = '\0';
-	}
 	else
 		*l = ft_split_line(str, i, lst);
 	return (str);
