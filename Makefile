@@ -7,8 +7,8 @@ VALLEAK = valgrind --leak-check=full --show-leak-kinds=all
 
 all: lib
 
-test: lib
-	$(CC) $(CFLAGS) get_next_line.c -L. $(NAME).a && ./a.out
+# test: lib
+# 	$(CC) $(CFLAGS) get_next_line.c -L. $(NAME).a && ./a.out
 
 lib : comp
 	ar rcs $(NAME).a $(SRC).o 
